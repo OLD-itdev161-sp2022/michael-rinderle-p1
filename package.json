@@ -27,7 +27,8 @@
     "esm": "^3.2.25",
     "express": "^4.17.2",
     "express-validator": "^6.14.0",
-    "mongoose": "^6.2.0"
+    "mongoose": "^6.2.3",
+    "typescript": "^4.5.5"
   },
   "devDependencies": {
     "concurrently": "^7.0.0",
