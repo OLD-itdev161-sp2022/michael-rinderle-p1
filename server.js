@@ -1,9 +1,10 @@
 import express from 'express';
 import connectDatabase from './config/db';
+import Compile from "./models/Compile"
 import cors from 'cors';
 import fs from 'fs';
-import { spawn, exec } from 'child_process'
-import path from 'path'
+import { exec } from 'child_process'
+
 
 // Initialize express application
 const server_port = 5000;
@@ -29,36 +30,39 @@ app.get("/", (req, res) =>
     res.send("http get request sent to root api endpoint")
 );
 
-
 app.post(`/compile`, (req, res) => {
 
+    // get code and create compilation entry
     let code = req.body.code;
-    // let compile = new Compile(new Date(), code);
-
+    let compile = new Compile({
+        timestamp: new Date(),
+        code: code
+    });
+    
     try {
 
+        // save code compilation to mongodb
+        compile.save();
+
+        // save code to c file
         let stream = fs.createWriteStream("./compile.c");
         stream.write(code);
+        // compile c code with clang (system installed)
         exec("clang.exe compile.c -v", (error, stdout, stderr) => {
-            if (error) {
-                console.log(`error: ${error.message}`);
-            }
-            if (stderr) {
-                console.log(`stderr: ${stderr}`);
-            }
-            console.log(`stdout: ${stdout}`);
             res.send(stderr);
             return;
         });
-        // await compile.save();
+
+        
       } catch (error) {
         res.status(500).end();
-        console.log("error");
-        res.end("error compiling");
+        res.end("Error compiling");
       }
 });
 
-
+app.get("/download", (req, res) => {
+    res.download(__dirname + "\\a.exe");
+});
 
 // Connection listener
 app.listen(server_port, () => console.log(`Express server running on port ${server_port}`));

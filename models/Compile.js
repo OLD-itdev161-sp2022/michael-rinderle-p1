@@ -8,10 +8,10 @@ const CompileSchema = new mongoose.Schema({
     code: {
         type: String,
         required: true,
-        unique: true
+        unique: false
     },
 });
 
-const Compile = mongoose.model('user', CompileSchema);
+const Compile = mongoose.model('compile', CompileSchema);
 
 export default Compile;

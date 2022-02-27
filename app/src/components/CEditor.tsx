@@ -1,12 +1,12 @@
-import PropTypes from 'prop-types'
 import React, { Fragment } from 'react'
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import styled from 'styled-components'
 import axios from 'axios';
+
 class CEditor extends React.Component
 {
   state = {
-    code: `#include <stdio.h>\n\nint main() {\n    printf("output");\n    return 0;\n}`,
+    code: `#include <stdio.h>\n\nint main() {\n    printf("hello from online c compiler!");\n    return 0;\n}`,
     output: ``
   }
 
@@ -16,7 +16,6 @@ class CEditor extends React.Component
   `
   CompileButton = styled.button`
       margin-top: 1.5em;
-
   `;
 
   CodeOutput = styled.p`
@@ -27,17 +26,26 @@ class CEditor extends React.Component
     margin: .25em;
   `
 
-  componentDidMount() {
-
-  }
-
   compileCode() {
     axios.post(`http://localhost:5000/compile`, 
       {
         code: this.state.code
       })
       .then((response) => {
-        this.setState({output: response.data});  
+        this.setState({output: response.data}); 
+        
+        axios({
+          method: `GET`,
+          url: `http://localhost:5000/download`,
+          responseType: `blob`
+        }). then((response) => {
+          var headers = response.headers;
+          var blob = new Blob([response.data],{type:headers['content-type']});
+          var link = document.createElement('a');
+          link.href = window.URL.createObjectURL(blob);
+          link.download = "output.exe";
+          link.click();
+        });
       })
       .catch((error) => {
         this.setState({output: `Error compiling`});
@@ -63,7 +71,6 @@ class CEditor extends React.Component
             }}
           />
           <this.CompileButton onClick={() => this.compileCode()}>Compile Code</this.CompileButton>
-            
           { this.state.output !== "" && 
             <div>
               <h2>Compilation Output</h2>

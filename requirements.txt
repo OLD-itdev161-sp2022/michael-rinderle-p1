@@ -1,5 +1,23 @@
-#Project 1
+# Project 1
 
-#Project Description
+# Project Description
 
-#Feature List
+This project is an implementation of a online C compiler. This allows 
+you to create simple C programs and use the online compiler to compile
+them. It also gives you to download the binary to use on an x64 Windows
+system. The UI also shows the standard output of the compilation in a
+visible console. The compiler is also connected to a Mongo database to 
+keep track of each compilation times and the code compiled in each entry.
+
+# Feature List
+
+Online Clang compiler
+React Front end
+Backend database
+
+# Requirements
+
+LLVM (Clang Compiler)
+NodeJS
+ReactJS
+Typescript
